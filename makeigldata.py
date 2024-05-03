@@ -50,6 +50,8 @@ with open('igldata.out', 'w') as file:
         messages = [ { 'role': 'user', 'content': question } ]
         worse_answers = generate(messages=messages, model=worse_model, tokenizer=worse_tokenizer, num_return_sequences=4)
         better_answers = generate(messages=messages, model=better_model, tokenizer=better_tokenizer, num_return_sequences=1)
+
+        # NB: we always use the better model to simulate user responses
     
         actions = []
         for answer in worse_answers:
