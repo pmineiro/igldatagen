@@ -44,8 +44,19 @@ better_tokenizer = AutoTokenizer.from_pretrained(better_model_id, add_special_to
 
 dataset = load_dataset('lmsys/chatbot_arena_conversations', token=os.environ.get('token', None))
 
-with open('igldata.out', 'w') as file:
-    for datum in tqdm(dataset['train']):
+if os.path.isfile('igldata.out'):
+    with open('igldata.out', 'rb') as f:
+        seekto = sum(1 for _ in f)
+else:
+    seekto = 0
+
+print(f'seekto = {seekto}', flush=True)
+
+with open('igldata.out', 'a') as file:
+    for n, datum in enumerate(tqdm(dataset['train'])):
+        if n < seekto:
+            continue
+
         question = datum['conversation_a'][0]['content']
         messages = [ { 'role': 'user', 'content': question } ]
         worse_answers = generate(messages=messages, model=worse_model, tokenizer=worse_tokenizer, num_return_sequences=4)
