@@ -37,7 +37,7 @@ def generate_data(handle):
 
 def low_mem_shuffle(gen):
     rgen = Random(2112)
-    buf = [None]*1000
+    buf = [None]*10000
 
     for v in gen:
         index = rgen.randrange(len(buf))
@@ -105,6 +105,6 @@ with ProgressPrinter(*metrics) as progress, open('igldata.out', 'r') as handle:
             pos_loss, neg_loss = loss, None
         else:
             neg_acc, pos_acc = datum.labels[best_score_index], None
-            neg_loss, poss_loss = loss, None
+            neg_loss, pos_loss = loss, None
 
         progress.addobs(pos_loss, pos_acc, neg_loss, neg_acc)
