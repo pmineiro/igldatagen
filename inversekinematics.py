@@ -93,8 +93,9 @@ optimizer, pcnt = make_optimizer(model, alpha)
 wrappers = { adapter.suffix: adapter.init_wrapper(model=model, tokenizer=tokenizer, optimizer=optimizer, clip=clip_lam) for adapter in adapters }
 metrics = [ 'posloss', 'posacc', 'negloss', 'negacc' ]
 
+save_every = 1000
 with ProgressPrinter(*metrics) as progress, open('igldata.out', 'r') as handle:
-    for datum in low_mem_shuffle(generate_data(handle)):
+    for n, datum in enumerate(low_mem_shuffle(generate_data(handle))):
         scores = wrappers['ik'].score(datum.prompts, micro_batch_size=4)
         best_score_index = max(enumerate(scores), key=lambda v:v[1])[0]
         updates = [ (msg, "Yes" if label else "No", 1) for msg, label in zip(datum.prompts, datum.labels) ]
@@ -108,3 +109,8 @@ with ProgressPrinter(*metrics) as progress, open('igldata.out', 'r') as handle:
             neg_loss, pos_loss = loss, None
 
         progress.addobs(pos_loss, pos_acc, neg_loss, neg_acc)
+
+        if n >= save_every and n % save_every == 0:
+            progress.autoprint = False
+            progress.print()
+            wrappers['ik'].save_pretrained(pathspec = [ "save", str(n) ])
