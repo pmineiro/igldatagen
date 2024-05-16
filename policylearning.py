@@ -128,11 +128,12 @@ with ProgressPrinter(*metrics) as progress, gzip.open('igldata.out.gz', 'r') as 
     for n, datum in enumerate(low_mem_shuffle(generate_data(handle, skip=skip_initial_count))):
         with torch.no_grad():
             fhats = wrappers['fhat'].score(datum.fhat_prompts, micro_batch_size=8)
-            maxfhat = max(fhats)
+            argmaxfhat, maxfhat = max(enumerate(fhats), key=lambda v:v[1])
             gamma = sqrt(1 + n) / gamma0
-            rawigw = [ 1 / (len(datum.fhat_prompts) + gamma * (maxfhat - fhat)) for fhat in fhats ]
-            sumrawigw = sum(rawigw)
-            igw = [ rawp / sumrawigw for rawp in rawigw ]
+            A = len(datum.fhat_prompts)
+            igw = [ 1 / (A + sqrt(A) * gamma * (maxfhat - fhat)) for fhat in fhats ]
+            sumigw = sum(igw)
+            igw[argmaxfhat] += (1 - sumigw)
             action = rgen.choices(list(range(len(datum.fhat_prompts))), weights=igw)[0]
 
             ik_score = wrappers['ik'].score([ datum.ik_prompts[action] ], micro_batch_size=1)[0]
