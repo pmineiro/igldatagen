@@ -1,4 +1,4 @@
-ik_save_dir=ik_save_dir/save_ik_10000 skip_initial_count = 20000 beta=0.3 sigma=0.1 gamma0=10.0
+ik_save_dir=ik_save_dir/save_ik_10000 skip_initial_count=20000 beta=0.3 sigma=0.1 gamma0=10.0
 n             fhatloss (since) inferredreward (since)     truereward (since)      dt
 1                0.004 (0.004)          0.000 (0.000)          0.000 (0.000)  2.09 s
 2                0.245 (0.485)          0.243 (0.486)          0.500 (1.000)   3.1 s
