@@ -130,7 +130,7 @@ with ProgressPrinter(*metrics) as progress, gzip.open('igldata.out.gz', 'r') as 
             fhats = wrappers['fhat'].score(datum.fhat_prompts, micro_batch_size=8)
             maxfhat = max(fhats)
             gamma = sqrt(1 + n) / gamma0
-            rawigw = [ 1 / (len(datum.fhat_prompts) + gamma * (fhat - maxfhat)) for fhat in fhats ]
+            rawigw = [ 1 / (len(datum.fhat_prompts) + gamma * (maxfhat - fhat)) for fhat in fhats ]
             sumrawigw = sum(rawigw)
             igw = [ rawp / sumrawigw for rawp in rawigw ]
             action = rgen.choices(list(range(len(datum.fhat_prompts))), weights=igw)[0]
