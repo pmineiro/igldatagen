@@ -22,7 +22,7 @@ beta = float(sys.argv[3])
 sigma = float(sys.argv[4])
 gamma0 = float(sys.argv[5])
 
-print(f'ik_save_dir={ik_save_dir} skip_initial_count = {skip_initial_count} beta={beta} sigma={sigma} gamma0={gamma0}', flush=True)
+print(f'ik_save_dir={ik_save_dir} skip_initial_count={skip_initial_count} beta={beta} sigma={sigma} gamma0={gamma0}', flush=True)
 
 #================================================
 
